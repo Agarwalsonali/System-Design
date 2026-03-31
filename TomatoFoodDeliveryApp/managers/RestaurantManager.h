@@ -1,0 +1,47 @@
+#ifndef RESTAURANT_MANAGER_H
+#define RESTAURANT_MANAGER_H
+
+#include<vector>
+#include<string>
+#include<algorithm>
+#include "../models/Restaurant.h"
+using namespace std;
+
+class RestaurantManager{
+    private:
+        vector<Restaurant*> restaurants;
+        static RestaurantManager* instance;
+        
+        RestaurantManager(){
+            // Private constructor
+        }
+
+    public:
+        static RestaurantManager* getInstance(){
+            if(!instance){
+                instance = new RestaurantManager();
+            }
+            return instance;
+        }
+
+        void addRestaurant(Restaurant* r){
+            restaurants.push_back(r);
+        }
+
+        vector<Restaurant*>searchByLocation(string &loc){
+            vector<Restaurant*> result;
+            transform(loc.begin(), loc.end(), loc.begin(), ::tolower); // Convert search location to lowercase
+            for(auto r: restaurants){
+                string rl=r->getLocation();
+                transform(rl.begin(), rl.end(), rl.begin(), ::tolower); // Convert restaurant location to lowercase
+                if(rl==loc){
+                    result.push_back(r);
+                }
+            }
+            return result;
+        }
+};
+
+RestaurantManager* RestaurantManager::instance=nullptr;
+
+#endif
